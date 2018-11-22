@@ -1,0 +1,131 @@
+<div style="padding-top: 5%" class="background_img">
+    <div ng-app="tableupdate" ng-controller="tableupdateController" class="container">
+        <div class="card col-md-6 offset-md-3 text-black bg-light mb-3">
+            <div class="card-body">
+
+                <form class="form-group" ng-submit="form.$valid && submit()" name="form" novalidate>
+                    <table class="table table-condensed table-responsive">
+                        <!-- <button style="margin-left: 10px" class="btn btn-danger float-right" ng-click="removeCol()"><i
+                                class="fas fa-minus-circle"></i></button> -->
+                        <button class="btn btn-warning float-right" ng-click="addNewColumn()"><i class="fas fa-plus-circle"></i></button><br>
+                        <div ng-repeat="y in tableinfo">
+                            <div>
+                                <label><b>Table Name</b></label>
+                                <input id="tablename" name="tablename" class="form-control" type="text" ng-model="y.tablename"
+                                    required>
+                                <span style="color: red" ng-show="form.$submitted && form.tablename.$error.required">Table
+                                    Name
+                                    Required</span>
+                            </div>
+                            <div>
+                                <label><b>Description</b></label>
+                                <input id="Description" name="description" class="form-control" type="text" ng-model="y.Description"
+                                    required><br>
+                                <span style="color: red" ng-show="form.$submitted && form.description.$error.required">Description
+                                    Required</span>
+                            </div>
+                        </div>
+                        <div class="table">
+                            <th>Column Name</th>
+                            <th>Column Type</th>
+                            <th>Primary Key</th>
+                            <th>Action</th>
+                            <tr ng-repeat="x in colinfo1">
+                                <td><input class="form-control" ng-model="x.fieldname" readonly></td>
+                                <td><input class="form-control" ng-model="x.fieldtype" readonly></td>
+                                <td><input class="form-control" ng-model="x.konstraint" readonly></td>
+                                <td><button type="button" class="btn" ng-click="removeColumn(x.fieldname)"><i class="fas fa-trash-alt"></i></button></td>
+                            </tr>
+                        </div>
+                        <div class="table">
+                            <fieldset class="form-group" ng-repeat="column in columns track by $index">
+                                <div class="row">
+                                    <div class="col">
+                                        <label><b>Column name</b></label>
+                                        <input id="text" name="colname{{$index}}" class="form-control" type="text"
+                                            ng-model="column.ColInfo.colname" placeholder="Column Name" required>
+                                        <span style="color: red" ng-show="form.$dirty && form.colname{{$index}}.$error.required">Column
+                                            Name is
+                                            Required</span>
+                                    </div>
+                                    <div class="col">
+                                        <label><b>Column type</b></label>
+                                        <select id="dtype" name="coltype{{$index}}" class="form-control" ng-model="column.ColInfo.type"
+                                            required>
+                                            <option value="text">Text</option>
+                                            <option value="integer">Integer</option>
+                                            <option value="bigint">Big Int</option>
+                                            <option value="varchar">Email</option>
+                                            <option value="date">Date</option>
+                                        </select>
+                                        <span style="color: red" ng-show="form.$dirty && form.coltype{{index}}.$error.required">Data
+                                            Type is
+                                            Required</span>
+                                    </div>
+                                    <div class="col">
+                                        <label><b>Primary Key</b></label>
+                                        <input class="form-control" type="checkbox" ng-model="column.ColInfo.constraints">
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <td colspan="2"> <button class="btn btn-primary" type="submit">Submit</button></td>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <fieldset ng-repeat="column in columns track by $index">
+                        <div class="row">
+                            <div class="col">
+                                <label><b>Column name</b></label>
+                                <input id="text" name="colname{{$index}}" class="form-control" type="text" ng-model="column.ColInfo.name"
+                                    placeholder="Column Name" required>
+                                <span style="color: red" ng-show="form.$dirty && form.colname{{$index}}.$error.required">Column
+                                    Name is
+                                    Required</span>
+                            </div>
+                            <div class="col">
+                                <label><b>Column type</b></label>
+                                <select id="dtype" name="coltype{{$index}}" class="form-control" ng-model="column.ColInfo.type"
+                                    required>
+                                    <option value="text">Text</option>
+                                    <option value="integer">Integer</option>
+                                    <option value="bigint">Big Int</option>
+                                    <option value="varchar">Email</option>
+                                    <option value="date">Date</option>
+                                </select>
+                                <span style="color: red" ng-show="form.$dirty && form.coltype{{index}}.$error.required">Data
+                                    Type is
+                                    Required</span>
+                            </div>
+                            <div class="col">
+                                <label><b>Primary Key</b></label>
+                                <input class="form-control" type="checkbox" ng-model="column.ColInfo.primary">
+                            </div>
+                        </div>
+                    </fieldset> -->

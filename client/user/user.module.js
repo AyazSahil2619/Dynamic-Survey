@@ -1,0 +1,1 @@
+angular.module('user', ['myService','authfactory','datatables']);

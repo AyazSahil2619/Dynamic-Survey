@@ -1,0 +1,53 @@
+<div style="padding: 5%" class="background_img">
+    <div ng-app="updatedata" ng-controller="updatedataController" class="container">
+        <div class="card col-md-6 offset-md-3 text-black bg-light mb-3">
+            <div class="card-body">
+                <form class="form-group" ng-submit="form.$valid && updateData()" name="form" novalidate>
+                    <table class="table">
+
+                        <tr ng-repeat="x in colinfo1">
+                            <td><label><b>{{x.fieldname}}</b></label></td>
+                            <td ng-if="x.fieldtype == 'text'">
+                                <input id="text" name="text" class="form-control" type="text" ng-model="data[x.fieldname]"
+                                    required>
+                                <span style="color: red" ng-show="form.$submitted && form.text.$error.required">{{x.fieldname}}
+                                    is
+                                    Required</span>
+
+                            </td>
+                            <td ng-if="x.fieldtype == 'integer' || x.fieldtype == 'bigint'">
+                                <input name="number" id="number" class="form-control" type="number" ng-model="data[x.fieldname]"
+                                    string-to-number required>
+                                <span style="color: red" ng-show="form.number.$dirty && form.number.$error.number">Enter
+                                    only Number</span>
+                                <span style="color: red" ng-show="form.number.$dirty && form.number.$error.required">{{x.fieldname}}
+                                    is
+                                    Required</span>
+                            </td>
+                            <td ng-if="x.fieldtype == 'date'">
+                                <input name="date" id="date" date-Input class="form-control" type="date" ng-model="data[x.fieldname]"
+                                    required>
+                                <span style="color: red" ng-show="form.$submitted && form.date.$error.required">{{x.fieldname}}
+                                    is
+                                    Required</span>
+
+                            </td>
+                            <td ng-if="x.fieldtype == 'varchar'">
+                                <input name="email" id="email" class="form-control" type="email" ng-model="data[x.fieldname]"
+                                    required>
+                                <span style="color: red" ng-show="form.email.$dirty && form.email.$error.email">Enter a
+                                    valid {{x.fieldname}}</span>
+                                <span style="color: red" ng-show="form.$submitted && form.email.$error.required">{{x.fieldname}}
+                                    is
+                                    Required</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><button class="btn btn-warning float-right " value="Submit">Submit</button></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

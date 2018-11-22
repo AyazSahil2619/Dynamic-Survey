@@ -1,0 +1,128 @@
+<!-- <style>
+    .registration_image{
+            background-image: url('../images/pexels-photo-316465.jpeg');
+            background-size: cover; 
+            height: 100vh;
+            color:rgb(31, 33, 156);
+                
+        }
+</style> -->
+
+<div class="registration_image">
+    <div ng-app="registration" ng-controller="registrationController" class="container">
+        <div class="col-md-7 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Sign Up</h4>
+                </div>
+                <div class="card-body">
+                    <form class="form-group" ng-submit="form.$valid && submit()" name="form" novalidate>
+                        <div>
+                            <label><b>Username </b><span>*</span></label>
+                            <input id="text" name="text" class="form-control" type="text" placeholder="Enter Username"
+                                ng-model="details.name" required>
+                            <span style="color: red" ng-show="form.$submitted && form.text.$error.required">Username is
+                                Required</span>
+                        </div>
+                        <div>
+                            <label><b>E-mail </b><span>*</span></label>
+                            <input name="email" id="email" class="form-control" type="email" placeholder="Enter email"
+                                ng-model="details.email" required>
+                            <span style="color: red" ng-show="form.email.$dirty && form.email.$error.email">Enter a
+                                valid Email</span>
+                            <span style="color: red" ng-show="form.$submitted && form.email.$error.required">Email is
+                                Required</span>
+                        </div>
+                        <div>
+                            <label><b>Password </b><span>*</span></label>
+                            <input name="password" id="password" class="form-control" type="password" placeholder="Enter Password"
+                                ng-model="details.password" required>
+                            <span style="color: red" ng-show="form.$submitted && form.password.$error.required">Password
+                                is
+                                Required</span>
+                        </div>
+                        <div>
+                            <label><b>Role </b><span>*</span></label>
+                            <select name="role" id="role" class="form-control" ng-model="details.role" required>
+                                <option value="">Select</option>
+                                <option value="admin">Admin</option>
+                                <option value="user">User</option>
+                            </select>
+                            <span style="color: red" ng-show="form.$submitted && form.role.$error.required">Role is
+                                Required</span><br>
+                        </div>
+                            <button class=" form-control btn btn-primary" type="submit">Register</button>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-center links">
+                        Already have an account?<a href="#!/login">Sign In</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="card col-md-6 offset-md-3 text-black bg-secondary mb-3">
+            <div class="card-body">
+                <form class="form-group" ng-submit="form.$valid && submit()" name="form" novalidate>
+                    <div>
+                        <label><b>Username </b><span>*</span></label>
+                        <input id="text" name="text" class="form-control" type="text" placeholder="Enter Username"
+                            ng-model="details.name" required>
+                        <span style="color: red" ng-show="form.$submitted && form.text.$error.required">Username is
+                            Required</span>
+                    </div><br>
+                    <div>
+                        <label><b>E-mail </b><span>*</span></label>
+                        <input name="email" id="email" class="form-control" type="email" placeholder="Enter email"
+                            ng-model="details.email" required>
+                        <span style="color: red" ng-show="form.email.$dirty && form.email.$error.email">Enter a
+                            valid Email</span>
+                        <span style="color: red" ng-show="form.$submitted && form.email.$error.required">Email is
+                            Required</span>
+                    </div><br>
+                    <div>
+                        <label><b>Password </b><span>*</span></label>
+                        <input name="password" id="password" class="form-control" type="password" placeholder="Enter Password"
+                            ng-model="details.password" required>
+                        <span style="color: red" ng-show="form.$submitted && form.password.$error.required">Password is
+                            Required</span>
+                    </div><br>
+                    <div>
+                        <label><b>Role </b><span>*</span></label>
+                        <select name="role" id="role" class="form-control" ng-model="details.role" required>
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                        </select>
+                        <span style="color: red" ng-show="form.$submitted && form.role.$error.required">Role is
+                            Required</span><br>
+                    </div><br>
+                    <p align="center">
+                        <button class="btn btn-primary" type="submit">Register</button>
+                    </p>
+                </form>
+            </div>
+        </div> -->

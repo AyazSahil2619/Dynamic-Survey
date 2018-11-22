@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html ng-app='MyApp'>
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <base href="/"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MY APP</title>
+
+    <style>
+        .login {
+            background-image: url('../images/pexels-photo-207301.jpeg');
+            background-size: cover;
+            height: 100vh;
+            color: rgb(235, 62, 32);
+
+        }
+
+        .registration_image {
+            background-image: url('../images/pexels-photo-316465.jpeg');
+            background-size: cover;
+            height: 100vh;
+            color: rgb(31, 33, 156);
+
+        }
+
+        .background_img {
+            background-image: url('../images/signbg.jpg');
+            background-size: cover;
+            background-repeat: round;
+            height: 150vh;
+
+        }
+    </style>
+
+
+
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+        crossorigin="anonymous">
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular-route.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular-cookies.js"></script>
+
+    <script src="./js/angular-datatables.min.js"></script>
+    <link rel="stylesheet" href="./js/angular-datatables.min.css">
+
+    <script src="./node_modules/angular-simple-toast/dist/angular-simple-toast.min.js"></script>
+    <link rel="stylesheet" href="./node_modules/angular-simple-toast/dist/angular-simple-toast.min.css">
+
+    <script src="app.module.js"></script>
+    <script src="app.config.js"></script>
+
+    <script src="./services/service.js"></script>
+    <script src="./factory/auth.factory.js"></script>
+
+    <script src="./login/login.module.js"></script>
+    <script src="./login/login.component.js"></script>
+
+    <script src="./logout/logout.module.js"></script>
+    <script src="./logout/logout.component.js"></script>
+
+    <script src="./registration/registration.module.js"></script>
+    <script src="./registration/registration.component.js"></script>
+
+    <script src="./admin/admin.module.js"></script>
+    <script src="./admin/admin.component.js"></script>
+
+    <script src="./user/user.module.js"></script>
+    <script src="./user/user.component.js"></script>
+
+    <script src="./updatedata/updatedata.module.js"></script>
+    <script src="./updatedata/updatedata.component.js"></script>
+
+    <script src="./tabledata/tabledata.module.js"></script>
+    <script src="./tabledata/tabledata.component.js"></script>
+
+    <script src="./operations/operations.module.js"></script>
+    <script src="./operations/operations.component.js"></script>
+
+    <script src="./data/data.module.js"></script>
+    <script src="./data/data.component.js"></script>
+
+    <script src="./tableupdate/tableupdate.module.js"></script>
+    <script src="./tableupdate/tableupdate.component.js"></script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-dark" style="background-color: #e3f2fd;">
+        <ul class="nav ">
+            <li ng-if="Role == 'admin'"><a class="nav-link" active-link="active" href="#!/adminlogin">Home</a></li>
+            <li ng-if="Role == 'user'"><a class="nav-link" active-link="active" href="#!/userlogin">Home</a></li>
+            <li ng-if="!CurrentUser"><a class="nav-link" active-link="active" href="#!/registration">Register</a></li>
+            <li ng-if="!CurrentUser"><a class="nav-link" active-link="active" href="#!/login">Login</a></li>
+        </ul>
+
+        <div class="nav float-right">
+            <a ng-if="CurrentUser" class="nav-link" active-link="active" href="#!/logout">Logout</a></li>
+        </div>
+    </nav>
+    <div ng-view></div>
+</body>
+
+</html>
