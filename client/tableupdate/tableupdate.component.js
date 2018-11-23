@@ -19,6 +19,7 @@ app.controller("tableupdateController", ['$scope', '$rootScope', '$location', '$
                                 if (item.fieldname != 'uid') {
                                     $scope.colinfo1.push({
                                         fieldname: unescape(item.fieldname),
+                                        label: item.label,
                                         fieldtype: item.fieldtype,
                                         konstraint: item.konstraint
                                     })
@@ -64,11 +65,11 @@ app.controller("tableupdateController", ['$scope', '$rootScope', '$location', '$
             };
 
             $scope.removeCol = function () {
-                
-                    newItemNo = $scope.columns.length - 1;
+
+                newItemNo = $scope.columns.length - 1;
                 $scope.columns.splice(newItemNo, 1);
-            
-        }
+
+            }
 
 
 
@@ -84,6 +85,7 @@ app.controller("tableupdateController", ['$scope', '$rootScope', '$location', '$
                     if ($scope.columns[i].ColInfo.constraints) {
                         let data = {
                             newfieldname: $scope.columns[i].ColInfo.colname,
+                            newlabel: $scope.columns[i].ColInfo.label,
                             newfieldtype: $scope.columns[i].ColInfo.type,
                             newkonstraint: $scope.columns[i].ColInfo.constraints
                         }
@@ -91,6 +93,7 @@ app.controller("tableupdateController", ['$scope', '$rootScope', '$location', '$
                     } else {
                         let data = {
                             newfieldname: $scope.columns[i].ColInfo.colname,
+                            newlabel: $scope.columns[i].ColInfo.label,
                             newfieldtype: $scope.columns[i].ColInfo.type,
                             newkonstraint: false
                         }
@@ -142,7 +145,7 @@ app.controller("tableupdateController", ['$scope', '$rootScope', '$location', '$
                                 userService.editTable($routeParams.tableid, $scope.newColumns)
                                     .then((response) => {
                                         console.log("AFTER RESPONSE");
-                                        userService.modified($routeParams.tableid, modifiedUser)
+                                        userService.modified($routeParams.tableid, $scope.modifiedUser)
                                             .then((response) => {
                                                 $location.path('/data/' + $routeParams.tableid);
                                                 toast.success(`${$scope.tableinfo[0].tablename} has been EDITED successfully`);

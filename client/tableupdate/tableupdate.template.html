@@ -26,12 +26,14 @@
                             </div>
                         </div>
                         <div class="table">
-                            <th>Column Name</th>
-                            <th>Column Type</th>
+                            <th>Name</th>
+                            <th>Label</th>
+                            <th>Field Type</th>
                             <th>Primary Key</th>
                             <th>Action</th>
                             <tr ng-repeat="x in colinfo1">
                                 <td><input class="form-control" ng-model="x.fieldname" readonly></td>
+                                <td><input class="form-control" ng-model="x.label" readonly></td>
                                 <td><input class="form-control" ng-model="x.fieldtype" readonly></td>
                                 <td><input class="form-control" ng-model="x.konstraint" readonly></td>
                                 <td><button type="button" class="btn" ng-click="removeColumn(x.fieldname)"><i class="fas fa-trash-alt"></i></button></td>
@@ -41,20 +43,27 @@
                             <fieldset class="form-group" ng-repeat="column in columns track by $index">
                                 <div class="row">
                                     <div class="col">
-                                        <label><b>Column name</b></label>
+                                        <label><b>Name</b></label>
                                         <input id="text" name="colname{{$index}}" class="form-control" type="text"
-                                            ng-model="column.ColInfo.colname" placeholder="Column Name" required>
+                                            ng-model="column.ColInfo.colname" placeholder="Name" required>
                                         <span style="color: red" ng-show="form.$dirty && form.colname{{$index}}.$error.required">Column
                                             Name is
                                             Required</span>
                                     </div>
                                     <div class="col">
-                                        <label><b>Column type</b></label>
+                                        <label><b>Label</b></label>
+                                        <input id="text" class="form-control" type="text" ng-model="column.ColInfo.label" name="label{{$index}}"
+                                            required>
+                                        <div style="color: red" ng-show="form.$dirty && form.label{{$index}}.$error.required">Label
+                                            is required</div>
+                                    </div>
+                                    <div class="col">
+                                        <label><b>Field type</b></label>
                                         <select id="dtype" name="coltype{{$index}}" class="form-control" ng-model="column.ColInfo.type"
                                             required>
                                             <option value="text">Text</option>
-                                            <option value="integer">Integer</option>
-                                            <option value="bigint">Big Int</option>
+                                            <option value="integer">Number</option>
+                                            <option value="bigint">BIg Number</option>
                                             <option value="varchar">Email</option>
                                             <option value="date">Date</option>
                                         </select>

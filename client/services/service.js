@@ -216,7 +216,7 @@ myService.factory('userService', ['$http', '$q', '$location', 'toast', function 
             var defer = $q.defer();
             $http.get('/fetchdata/' + id)
                 .then(function (result) {
-                    console.log(result.data,"oooooooooooooooooooooo");
+                    console.log(result.data, "oooooooooooooooooooooo");
                     defer.resolve(result.data);
                 });
             return defer.promise;
@@ -233,6 +233,23 @@ myService.factory('userService', ['$http', '$q', '$location', 'toast', function 
                         return $q.reject(errResponse);
                     });
         },
+        fetchddValue: function (id) {
+            return $http.get('/dropdown/' + id)
+                .then(
+                    function (response) {
+                        console.log(response, "IN SERVICE AFTER RESPONSE");
+                        return response.data;
+                    },
+                    function (errResponse) {
+                        if (errResponse.data.msg == 'INVALID') {
+                            $location.path('/login');
+                        }
+                        console.error(errResponse, 'Error while fetching dropdown data');
+                        return $q.reject(errResponse);
+                    }
+                );
+        },
+       
 
     }
 

@@ -73,6 +73,8 @@ app.get('/fetchdata/:id', operations.TableData);
 app.delete('/deletedata/:tableid/:rowid', operations.deleteData)
 app.get('/updatedata/:tableid/:uid', operations.getdetails)
 app.put('/updaterow/:id', operations.updateRow);
+app.get('/dropdown/:id', operations.fetchDropdownList);
+
 
 
 

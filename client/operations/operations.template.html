@@ -9,13 +9,18 @@
                             <td><input class="form-control" type="number" ng-model="id" readonly></td>
                         </tr>
                         <tr ng-repeat="x in colinfo1">
-                            <td><label><b>{{x.fieldname}}</b></label></td>
+                            <!-- <td><label><b>{{x.fieldname}}</b></label></td> -->
+                            <td><label><b>{{x.label}}</b></label></td>
                             <td ng-if="x.fieldtype == 'text'">
                                 <input id="text" name="text" class="form-control" type="text" ng-model="data[x.fieldname]"
                                     required>
                                 <span style="color: red" ng-show="form.$submitted && form.text.$error.required">{{x.fieldname}}
                                     Required</span>
-
+                            </td>
+                            <td ng-if="x.fieldtype == 'dropdown'">
+                                <select class="form-control" ng-model="data[x.fieldname]" required>
+                                    <option value="{{y.ddValue}}" ng-repeat="y in ddinfo1">{{y.ddValue}}</option>
+                                </select>
                             </td>
                             <td ng-if="x.fieldtype == 'varchar'">
                                 <input name="email" id="email" class="form-control" type="email" ng-model="data[x.fieldname]"

@@ -1,22 +1,12 @@
-<!-- <style>
-    .createTable{
-            background-image: url('../images/signbg.jpg');
-            background-size: cover; 
-            height: 100vh;
-            /* color:rgb(235, 62, 32); */
-                
-        }
-</style> -->
-
 <div style="padding-top: 10%" class="background_img">
     <div ng-app="tabledata" ng-controller="tabledataController" class="container">
-        <div  class="card col-md-8 offset-md-2 text-black bg-light mb-3">
+        <div class="card col-md-8 offset-md-2 text-black bg-light mb-3">
             <div class="card-body" ng-show='showtable'>
                 <form ng-submit="form.$valid && showColoumns()" name="form1" class="form-group" novalidate>
                     <div>
-                        <label><b>Table name </b><i Style="color: red">*</i></label>
+                        <label><b>Survey name </b><i Style="color: red">*</i></label>
                         <input class="form-control" name="name" type="text" ng-model="tableInfo.tablename" required>
-                        <div style="color: red" ng-show="form1.$submitted && form1.name.$error.required">Table Name is
+                        <div style="color: red" ng-show="form1.$submitted && form1.name.$error.required">Survey Name is
                             required</div>
                     </div><br>
                     <div>
@@ -37,30 +27,45 @@
                 <form ng-submit="form.$valid && submit()" name="form" class="form-group" novalidate>
                     <fieldset ng-repeat="column in columns track by $index">
                         <div class="row">
-                            <div class="col">
-                                <label>Column Name *</label>
+                            <div class="col-md-6">
+                                <label>Name *</label>
                                 <input class="form-control" type="text" ng-model="column.ColInfo.name" name="colname{{$index}}"
                                     placeholder="Column Name" required>
-                                <div style="color: red" ng-show="form.$submitted && form.colname{{$index}}.$error.required">Column
-                                    Name is required</div>
+                                <div style="color: red" ng-show="form.$submitted && form.colname{{$index}}.$error.required">Name
+                                    is required</div>
                             </div>
-                            <div class="col">
-                                <label>Column type *</label>
+                            <div class="col-md-6">
+                                <label> Primary Key</label>
+                                <input class="form-control" type="checkbox" name="constraints" ng-model="column.ColInfo.constraints"><br>
+                            </div>
+                            <div class="col-md-12">
+                                <label>Label *</label>
+                                <input class="form-control" type="text" ng-model="column.ColInfo.label" name="label{{$index}}"
+                                    required>
+                                <div style="color: red" ng-show="form.$submitted && form.label{{$index}}.$error.required">Label
+                                    is required</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Field type *</label>
                                 <select class="form-control" name="coltype{{$index}}" ng-model="column.ColInfo.type"
                                     required>
                                     <option value="" selected>select</option>
                                     <option value="text">Text</option>
                                     <option value="varchar">Email</option>
-                                    <option value="integer">Integer</option>
-                                    <option value="bigint">Big Int</option>
+                                    <option value="integer">Number</option>
+                                    <option value="bigint">Big Number</option>
                                     <option value="date">Date</option>
+                                    <option value="dropdown">Dropdown</option>
                                 </select>
-                                <div style="color: red" ng-show="form.$submitted && form.coltype{{$index}}.$error.required">Column
+                                <div style="color: red" ng-show="form.$submitted && form.coltype{{$index}}.$error.required">Field
                                     Type is required</div>
                             </div>
-                            <div class="col">
-                                <label> Primary Key</label>
-                                <input class="form-control" type="checkbox" name="constraints" ng-model="column.ColInfo.constraints"><br>
+                            <div class="col-md-6" ng-if="column.ColInfo.type == 'dropdown'">
+                                <label>Dropdown Value</label>
+                                <a class="btn btn-primary float-right" ng-click="dropdown()"><i class="fas fa-plus-circle"></i></a>
+                                <div ng-repeat="dropdown in dropdownlist track by $index">
+                                    <input class="form-control" name="dd{{$index}}" type="text" ng-model="dropdown.ddInfo.ddlist"><br>
+                                </div>
                             </div>
                         </div>
                     </fieldset><br>

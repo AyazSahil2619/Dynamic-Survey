@@ -66,9 +66,21 @@ async function getdetails(req, res) {
 async function updateRow(req, res) {
 
     const tableid = parseInt(req.params.id, 10);
-    
+
     try {
         let data = await repository.updateRow(req, res, tableid);
+        res.status(200).json(data)
+
+    } catch (err) {
+        res.status(400).json(err);
+    }
+}
+async function fetchDropdownList(req, res) {
+
+    const tableid = parseInt(req.params.id, 10);
+
+    try {
+        let data = await repository.fetchDropdownList(req, res, tableid);
         res.status(200).json(data)
 
     } catch (err) {
@@ -82,5 +94,6 @@ module.exports = {
     TableData: TableData,
     deleteData: deleteData,
     getdetails: getdetails,
-    updateRow: updateRow
+    updateRow: updateRow,
+    fetchDropdownList: fetchDropdownList
 }

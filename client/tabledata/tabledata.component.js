@@ -9,7 +9,7 @@ app.controller('tabledataController', ['$scope', '$rootScope', '$location', 'use
         if (Auth.isLoggedIn()) {
             $scope.showtable = true;
             $scope.ColInfo = [];
-
+            $scope.list =[];
 
             $scope.showColoumns = function () {
 
@@ -34,6 +34,7 @@ app.controller('tabledataController', ['$scope', '$rootScope', '$location', 'use
                     if ($scope.columns[i].ColInfo.constraints) {
                         let data = {
                             name: $scope.columns[i].ColInfo.name,
+                            label: $scope.columns[i].ColInfo.label,
                             type: $scope.columns[i].ColInfo.type,
                             constraint: $scope.columns[i].ColInfo.constraints
                         }
@@ -41,6 +42,7 @@ app.controller('tabledataController', ['$scope', '$rootScope', '$location', 'use
                     } else {
                         let data = {
                             name: $scope.columns[i].ColInfo.name,
+                            label: $scope.columns[i].ColInfo.label,
                             type: $scope.columns[i].ColInfo.type
                         }
                         $scope.ColInfo.push(data);
@@ -52,25 +54,44 @@ app.controller('tabledataController', ['$scope', '$rootScope', '$location', 'use
                 $scope.tableInfo.currentUser = $rootScope.CurrentUser;
                 $scope.tableInfo.ColInfo = $scope.ColInfo;
 
-                userService.create($scope.tableInfo)
-                    .then((response) => {
-                            toast.info('Table created successfully !!')
-                            $location.path('/adminlogin');
-                        },
-                        function (errResponse) {
-                            if (errResponse.data == '42701') {
-                                toast.error('Sorry ! Table not created .. Each COLUMN NAME must be unique');
-                                $location.path('/adminlogin');
-                            } else {
-                                toast.error('Sorry! Table not created')
-                                console.error('Error while creating table.');
 
+                $scope.dropdownlist.forEach((item,index) => {
+
+                    let data = {
+                        dropdownOption: item.ddInfo.ddlist
+                    }
+                    $scope.list.push(data);
+                    
+                });
+                console.log($scope.list, "Dropdown  list")
+
+                $scope.tableInfo.dropdownValue = $scope.list;
+
+                console.log($scope.tableInfo, "TBLE INFO")
+                
+
+                    userService.create($scope.tableInfo)
+                        .then((response) => {
+                                toast.info('Table created successfully !!')
+                                $location.path('/adminlogin');
+                            },
+                            function (errResponse) {
+                                if (errResponse.data == '42701') {
+                                    toast.error('Sorry ! Table not created .. Each COLUMN NAME must be unique');
+                                    $location.path('/adminlogin');
+                                } else {
+                                    toast.error('Sorry! Table not created')
+                                    console.error('Error while creating table.');
+
+                                }
                             }
-                        }
-                    );
+                        );
             };
 
             $scope.columns = [];
+            $scope.dropdownlist = [];
+            $scope.ddInfo = [];
+            
 
             $scope.addNewColumn = function () {
                 var newItemNo = $scope.columns.length + 1;
@@ -82,6 +103,13 @@ app.controller('tabledataController', ['$scope', '$rootScope', '$location', 'use
             $scope.removeColumn = function () {
                 var newItemNo = $scope.columns.length - 1;
                 $scope.columns.splice(newItemNo, 1);
+            }
+
+            $scope.dropdown = function () {
+                var count =  $scope.dropdownlist.length + 1;
+                $scope.dropdownlist.push({
+                    'id': 'dd' + count
+                });
             }
 
 

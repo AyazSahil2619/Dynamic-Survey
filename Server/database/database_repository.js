@@ -15,13 +15,22 @@ async function queryExecute(query) {
 
 async function CreateTable(req, res) {
 
+    console.log(req.body, "BODY");
 
     let colquery = '';
     let fieldsData = [];
     let ColInfo = req.body.ColInfo;
     let constraints = '';
     let query = '';
+    let dropdownlist = req.body.dropdownValue;
+    let dropdownData = [];
 
+
+    dropdownlist.forEach((item, index) => {
+        dropdownData.push({
+            options: item.dropdownOption,
+        })
+    })
 
     ColInfo.forEach((item, index) => {
         if (item.constraint) {
@@ -32,6 +41,8 @@ async function CreateTable(req, res) {
             fieldsData.push({
                 // fieldname: item.name,
                 fieldname: escape(item.name),
+                // label field added
+                label: item.label,
                 fieldtype: item.type,
                 Konstraint: true
             })
@@ -39,24 +50,37 @@ async function CreateTable(req, res) {
             fieldsData.push({
                 // fieldname: item.name,
                 fieldname: escape(item.name),
+                // label field added
+                label: item.label,
                 fieldtype: item.type,
                 Konstraint: false
             })
         }
         // colquery = colquery + ' ' + item.name + ' ' + item.type + ',';
         // colquery = colquery + ' ' + '"' + item.name + '"' + ' ' + item.type + ',';
-        colquery = colquery + ' ' + '"' + escape(item.name) + '"' + ' ' + item.type + ',';
-        
+        if(item.type == 'dropdown'){
+            colquery = colquery + ' ' + '"' + escape(item.name) + '"' + ' ' + 'text' + ',';
+        }
+        else{
+            colquery = colquery + ' ' + '"' + escape(item.name) + '"' + ' ' + item.type + ',';
+        }
+
 
     });
 
     fieldsData.push({
         fieldname: 'uid',
+        label: false,
         fieldtype: 'serial',
         Konstraint: false
     })
 
     colquery = colquery + 'uid SERIAL' + ',';
+
+    console.log(colquery, "COLUMN QUERY");
+    console.log(fieldsData, "FIELDS DATA");
+
+
 
     constraints = constraints.replace(/(^[,\s]+)|([,\s]+$)/g, '');
     let tablename = escape(req.body.tablename);
@@ -66,7 +90,7 @@ async function CreateTable(req, res) {
         // query = `CREATE TABLE IF NOT EXISTS "${req.body.tablename}" (${colquery} PRIMARY KEY (${constraints}));`
         query = `CREATE TABLE IF NOT EXISTS "${tablename}" (${colquery} PRIMARY KEY (${constraints}));`
 
-        console.log(query,"QUERY");
+        console.log(query, "QUERY");
 
     } else {
         colquery = colquery.replace(/(^[,\s]+)|([,\s]+$)/g, '');
@@ -101,13 +125,26 @@ async function CreateTable(req, res) {
             field.tableid = response2.rows[0].id
         });
 
+        dropdownData.forEach((field) => {
+            field.tableid = response2.rows[0].id
+        })
+
+console.log(dropdownData,"DROP DOWN")
+
         let query3 = squel
             .insert()
             .into("fieldstable")
             .setFieldsRows(fieldsData)
             .toString();
 
+        let query4 = squel
+            .insert()
+            .into("dropdowntable")
+            .setFieldsRows(dropdownData)
+            .toString();
+
         let response3 = await queryExecute(query3);
+        let response4 = await queryExecute(query4);
 
         return response;
 
@@ -244,8 +281,8 @@ async function TableData(id) {
 
 async function editTable(req, res, id) {
 
-    console.log(id,"ID");
-    console.log(req.body,"BODY");
+    console.log(id, "ID");
+    console.log(req.body, "BODY");
 
 
     let fieldsData = [];
@@ -280,11 +317,11 @@ async function editTable(req, res, id) {
         let newdata = {};
 
         for (var key in item) {
-            if (key == 'fieldname' || key == 'fieldtype' || key == 'konstraint') {
+            if (key == 'fieldname' || key == 'label' || key == 'fieldtype' || key == 'konstraint') {
 
                 data[key] = item[key]
 
-            } else if (key == 'newfieldname' || key == 'newfieldtype' || key == 'newkonstraint') {
+            } else if (key == 'newfieldname' || key == 'newlabel' || key == 'newfieldtype' || key == 'newkonstraint') {
 
                 newdata[key] = item[key];
 
@@ -311,10 +348,11 @@ async function editTable(req, res, id) {
             columnQuery = columnQuery + 'ADD COLUMN' + ' ' + '"' + escape(item.newfieldname) + '"' + ' ' + item.newfieldtype + ','
         }
         for (var key in item) {
-            if (key == 'newfieldname' || key == 'newfieldtype' || key == 'newkonstraint') {
+            if (key == 'newfieldname' || key == 'newlabel' || key == 'newfieldtype' || key == 'newkonstraint') {
 
                 data = {
                     fieldname: escape(item.newfieldname),
+                    label: item.newlabel,
                     fieldtype: item.newfieldtype,
                     konstraint: item.newkonstraint
                 }
@@ -414,7 +452,7 @@ async function editTable(req, res, id) {
             let alterColumnQuery = `ALTER TABLE "${newData.tablename}" ${columnQuery} ;`
             console.log(alterColumnQuery, "QUERY");
             let columnResult = await queryExecute(alterColumnQuery);
-          
+
             if (constraint) {
                 let constraintQuery = `ALTER TABLE "${newData.tablename}" ADD PRIMARY KEY (${constraint});`
                 console.log(constraintQuery, "QURRYYYYYYYYYYYY")
@@ -502,50 +540,50 @@ module.exports = {
 
 
 
- // fieldsData.push({
-    //     fieldname: 'uid',
-    //     fieldtype: 'serial',
-    //     constraint: false
-    // })
+// fieldsData.push({
+//     fieldname: 'uid',
+//     fieldtype: 'serial',
+//     constraint: false
+// })
 
-    // fieldsData.forEach((field) => {
-    //     field.tableid = id
-    // });
+// fieldsData.forEach((field) => {
+//     field.tableid = id
+// });
 
-    //  let fieldstableQuery = squel
-    //     .select()
-    //     .from('fieldstable')
-    //     .field('fieldname')
-    //     .where('tableid=?', id)
-    //     .toString();
+//  let fieldstableQuery = squel
+//     .select()
+//     .from('fieldstable')
+//     .field('fieldname')
+//     .where('tableid=?', id)
+//     .toString();
 
-    // let deleteFieldQuery = squel
-    //     .delete()
-    //     .from('fieldstable')
-    //     .where('tableid=?', id)
-    //     .toString();
+// let deleteFieldQuery = squel
+//     .delete()
+//     .from('fieldstable')
+//     .where('tableid=?', id)
+//     .toString();
 
-    // // console.log(updateTableQuery, "11");
-    // // console.log(deleteFieldQuery, "22");
-    // // console.log(insertFieldQuery, "33");
+// // console.log(updateTableQuery, "11");
+// // console.log(deleteFieldQuery, "22");
+// // console.log(insertFieldQuery, "33");
 
-    // try {
-    //     let oldData = await TableData(id);
-    //     let tablenameQuery = `ALTER TABLE IF EXISTS ${oldData.tablename} RENAME TO ${newData.tablename}`
+// try {
+//     let oldData = await TableData(id);
+//     let tablenameQuery = `ALTER TABLE IF EXISTS ${oldData.tablename} RENAME TO ${newData.tablename}`
 
-    //     let columnQuery = ``
+//     let columnQuery = ``
 
-    //     let resp = await queryExecute(updateTableQuery);
-    //     let resp1 = await queryExecute(deleteFieldQuery)
-    //     let resp2 = await queryExecute(insertFieldQuery);
+//     let resp = await queryExecute(updateTableQuery);
+//     let resp1 = await queryExecute(deleteFieldQuery)
+//     let resp2 = await queryExecute(insertFieldQuery);
 
-    //     // console.log(resp,"0000");
-    //     // console.log(resp1,"111");
-    //     // console.log(resp2,"222");
+//     // console.log(resp,"0000");
+//     // console.log(resp1,"111");
+//     // console.log(resp2,"222");
 
 
-    //     // return resp2;
+//     // return resp2;
 
-    // } catch (err) {
-    //     return Promise.reject(err);
-    // }
+// } catch (err) {
+//     return Promise.reject(err);
+// }

@@ -37,7 +37,7 @@ async function view(req, res, id) {
 
 async function addDataToTable(req, res, id) {
 
-    console.log(req.body,"INSIDE ADDDING DATA TO TABLE")
+    console.log(req.body, "INSIDE ADDDING DATA TO TABLE")
 
     let body = [req.body];
     let colquery = '';
@@ -131,7 +131,7 @@ async function TableData(req, res, id) {
         return newArray;
 
     } catch (err) {
-        console.log(err,"ERROR")
+        console.log(err, "ERROR")
         return Promise.reject(err.message);
     }
 }
@@ -203,7 +203,7 @@ async function updateRow(req, res, id) {
         .where("id =?", id)
         .toString();
 
-    console.log(req.body,"qqq");
+    console.log(req.body, "qqq");
 
     try {
         let res = await queryExecute(query);
@@ -219,7 +219,7 @@ async function updateRow(req, res, id) {
             }
         })
 
-        console.log(condition,"CONDITION");
+        console.log(condition, "CONDITION");
 
         values = values.replace(/(^[,\s]+)|([,\s]+$)/g, '');
 
@@ -236,12 +236,34 @@ async function updateRow(req, res, id) {
         return Promise.reject(err);
     }
 }
+async function fetchDropdownList(req, res, id) {
 
+    let query = squel
+        .select()
+        .from("dropdowntable")
+        .where("tableid =?", id)
+        .toString();
+
+    try {
+        let resp = await queryExecute(query);
+        if (resp.rowCount > 0) {
+            console.log(resp);
+            return resp.rows;
+        } else {
+            return Promise.reject({
+                err: "Data not found"
+            });
+        }
+    } catch (err) {
+        return Promise.reject(err.message);
+    }
+}
 module.exports = {
     view: view,
     addDataToTable: addDataToTable,
     TableData: TableData,
     deleteData: deleteData,
     getdetails: getdetails,
-    updateRow: updateRow
+    updateRow: updateRow,
+    fetchDropdownList: fetchDropdownList
 }

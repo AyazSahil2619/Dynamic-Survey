@@ -14,16 +14,18 @@ app.controller('operationsController', ['$scope', '$rootScope', '$location', '$r
                     .then((response) => {
                             $scope.colinfo1 = [];
                             $scope.colinfo = response;
+
                             $scope.colinfo.forEach((item, index) => {
                                 if (item.fieldname != 'uid') {
                                     $scope.colinfo1.push({
                                         fieldname: unescape(item.fieldname),
+                                        label: item.label,
                                         fieldtype: item.fieldtype
                                     })
                                 }
                             });
                             $scope.id = response[0].tableid;
-
+                            console.log($scope.colinfo1, ";;;;");
                         },
                         function (errResponse) {
 
@@ -32,6 +34,25 @@ app.controller('operationsController', ['$scope', '$rootScope', '$location', '$r
                     );
             };
             $scope.edit();
+
+            $scope.dropdownInfo = function () {
+                userService.fetchddValue($routeParams.id)
+                    .then((response) => {
+                            $scope.ddinfo1 = [];
+                            $scope.ddinfo = response;
+                            $scope.ddinfo.forEach((item, index) => {
+                                    $scope.ddinfo1.push({
+                                         ddValue: item.options
+                                    })
+                            });
+                            console.log($scope.ddinfo1, "ddinfo1");
+                        },
+                        function (errResponse) {
+                            console.error('Error while fetching dropdown data ');
+                        }
+                    );
+            }
+            $scope.dropdownInfo();
 
             $scope.data = {};
             $scope.tableinfo = {

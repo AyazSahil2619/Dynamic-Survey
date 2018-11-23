@@ -13,15 +13,20 @@ app.controller("updatedataController", ['$scope', '$rootScope', '$location', '$r
                 userService.getById($routeParams.tableid)
                     .then((response) => {
                             $scope.colinfo = response;
+                        console.log($scope.colinfo, "111TEST");
+                            
                             $scope.colinfo1 = [];
                             $scope.colinfo.forEach((item, index) => {
                                 if (item.fieldname != 'uid') {
                                     $scope.colinfo1.push({
                                         fieldname: unescape(item.fieldname),
+                                        label: item.label,
                                         fieldtype: item.fieldtype
                                     })
                                 }
                             });
+                        console.log($scope.colinfo1, "TEST");
+                            
                         },
                         function (errResponse) {
                             console.error('Error while fetching field data ');

@@ -6,7 +6,8 @@
                     <table class="table">
 
                         <tr ng-repeat="x in colinfo1">
-                            <td><label><b>{{x.fieldname}}</b></label></td>
+                            <!-- <td><label><b>{{x.fieldname}}</b></label></td> -->
+                            <td><label><b>{{x.label}}</b></label></td><br>
                             <td ng-if="x.fieldtype == 'text'">
                                 <input id="text" name="text" class="form-control" type="text" ng-model="data[x.fieldname]"
                                     required>
