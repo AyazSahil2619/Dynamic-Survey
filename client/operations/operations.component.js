@@ -38,14 +38,19 @@ app.controller('operationsController', ['$scope', '$rootScope', '$location', '$r
             $scope.dropdownInfo = function () {
                 userService.fetchddValue($routeParams.id)
                     .then((response) => {
-                            $scope.ddinfo1 = [];
-                            $scope.ddinfo = response;
-                            $scope.ddinfo.forEach((item, index) => {
+                            if (response) {
+                                $scope.ddinfo1 = [];
+                                $scope.ddinfo = response;
+                                $scope.ddinfo.forEach((item, index) => {
                                     $scope.ddinfo1.push({
-                                         ddValue: item.options
+                                        ddValue: item.options,
+                                        colname: item.colname
                                     })
-                            });
-                            console.log($scope.ddinfo1, "ddinfo1");
+                                });
+                                console.log($scope.ddinfo1, "ddinfo1");
+                            } else {
+                                console.log(response);
+                            }
                         },
                         function (errResponse) {
                             console.error('Error while fetching dropdown data ');

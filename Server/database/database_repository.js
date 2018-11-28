@@ -22,15 +22,24 @@ async function CreateTable(req, res) {
     let ColInfo = req.body.ColInfo;
     let constraints = '';
     let query = '';
-    let dropdownlist = req.body.dropdownValue;
+    let dropdownlist = req.body.ddInfo;
     let dropdownData = [];
 
+    if (dropdownlist.length != 0) {
 
-    dropdownlist.forEach((item, index) => {
-        dropdownData.push({
-            options: item.dropdownOption,
+        dropdownlist.forEach((item, index) => {
+            for (var key in item) {
+                if (key != 'colname') {
+                    dropdownData.push({
+                        options: item[key],
+                        colname: item.colname
+                    })
+                }
+            }
         })
-    })
+    }
+
+    console.log(dropdownData, "DROP DOWN DATA");
 
     ColInfo.forEach((item, index) => {
         if (item.constraint) {
@@ -58,10 +67,9 @@ async function CreateTable(req, res) {
         }
         // colquery = colquery + ' ' + item.name + ' ' + item.type + ',';
         // colquery = colquery + ' ' + '"' + item.name + '"' + ' ' + item.type + ',';
-        if(item.type == 'dropdown'){
+        if (item.type == 'dropdown') {
             colquery = colquery + ' ' + '"' + escape(item.name) + '"' + ' ' + 'text' + ',';
-        }
-        else{
+        } else {
             colquery = colquery + ' ' + '"' + escape(item.name) + '"' + ' ' + item.type + ',';
         }
 
@@ -120,32 +128,35 @@ async function CreateTable(req, res) {
             .toString();
 
         let response2 = await queryExecute(query2);
+        let tableid = response2.rows[0].id;
 
         fieldsData.forEach((field) => {
-            field.tableid = response2.rows[0].id
+            field.tableid = tableid
         });
-
-        dropdownData.forEach((field) => {
-            field.tableid = response2.rows[0].id
-        })
-
-console.log(dropdownData,"DROP DOWN")
 
         let query3 = squel
             .insert()
             .into("fieldstable")
             .setFieldsRows(fieldsData)
             .toString();
-
-        let query4 = squel
-            .insert()
-            .into("dropdowntable")
-            .setFieldsRows(dropdownData)
-            .toString();
-
         let response3 = await queryExecute(query3);
-        let response4 = await queryExecute(query4);
 
+        if (dropdownlist.length != 0) {
+
+            dropdownData.forEach((field) => {
+                field.tableid = tableid
+            })
+
+            console.log(dropdownData, "DROP DOWN")
+
+            let query4 = squel
+                .insert()
+                .into("dropdowntable")
+                .setFieldsRows(dropdownData)
+                .toString();
+
+            let response4 = await queryExecute(query4);
+        }
         return response;
 
     } catch (err) {
@@ -282,6 +293,7 @@ async function TableData(id) {
 async function editTable(req, res, id) {
 
     console.log(id, "ID");
+
     console.log(req.body, "BODY");
 
 
@@ -291,48 +303,77 @@ async function editTable(req, res, id) {
 
     let newData = {};
     let columnQuery = '';
-    let deleteColumn = '';
+    let deleteColumns = '';
     let changed = false;
 
+    let dropdownlist = req.body.ddInfo;
+    let dropdownData = [];
 
-    req.body.forEach((item, index) => {
+    if (dropdownlist.length != 0) {
+
+        dropdownlist.forEach((item, index) => {
+            for (var key in item) {
+                if (key != 'colname') {
+                    dropdownData.push({
+                        options: item[key],
+                        colname: item.colname
+                    })
+                }
+            }
+        })
+    }
+
+    console.log(dropdownData, "DROP DOWN DATA");
+
+    req.body.tableInfo.forEach((item, index) => {
         for (var key in item) {
             if (key == 'tablename' || key == 'Description') {
                 newData = {
                     tablename: escape(item.tablename),
                     Description: item.Description
                 }
-            } else {
-                if (key == 'deletefield') {
-                    deleteColumn = deleteColumn + 'DROP COLUMN' + ' ' + '"' + escape(item.deletefield) + '"' + ','
-                }
             }
         }
     })
 
+    console.log(newData, "new data");
 
-    req.body.forEach((item, index) => {
 
-        let data = {};
-        let newdata = {};
-
+    req.body.deleteColumn.forEach((item) => {
         for (var key in item) {
-            if (key == 'fieldname' || key == 'label' || key == 'fieldtype' || key == 'konstraint') {
-
-                data[key] = item[key]
-
-            } else if (key == 'newfieldname' || key == 'newlabel' || key == 'newfieldtype' || key == 'newkonstraint') {
-
-                newdata[key] = item[key];
-
+            if (key == 'deletefield') {
+                deleteColumns = deleteColumns + 'DROP COLUMN' + ' ' + '"' + escape(item.deletefield) + '"' + ','
             }
         }
-        if (Object.keys(data).length != 0)
-            fieldsData.push(data);
+    })
+    console.log(deleteColumns, " deleteColumns");
 
+    req.body.newColumns.forEach((item) => {
+        let newdata = {};
+        for (var key in item) {
+            if (key == 'newfieldname' || key == 'newlabel' || key == 'newfieldtype' || key == 'newkonstraint') {
+                newdata[key] = item[key];
+            }
+        }
         if (Object.keys(newdata).length != 0)
             newfieldsData.push(newdata);
     })
+
+    console.log(newfieldsData, " newfieldsData");
+
+    req.body.oldColumn.forEach((item) => {
+        let data = {};
+        for (var key in item) {
+            if (key == 'fieldname' || key == 'label' || key == 'fieldtype' || key == 'konstraint') {
+                data[key] = item[key];
+            }
+
+        }
+        if (Object.keys(data).length != 0)
+            fieldsData.push(data);
+    })
+
+    console.log(fieldsData, " fieldsData");
 
 
     newfieldsData.forEach((item) => {
@@ -344,6 +385,9 @@ async function editTable(req, res, id) {
 
             constraint = constraint + ' ' + '"' + escape(item.newfieldname) + '"' + ','
 
+        } else if (item.newfieldtype == 'dropdown') {
+            columnQuery = columnQuery + 'ADD COLUMN' + ' ' + '"' + escape(item.newfieldname) + '"' + ' ' +
+                'text' + ','
         } else {
             columnQuery = columnQuery + 'ADD COLUMN' + ' ' + '"' + escape(item.newfieldname) + '"' + ' ' + item.newfieldtype + ','
         }
@@ -369,9 +413,9 @@ async function editTable(req, res, id) {
 
     constraint = constraint.replace(/(^[,\s]+)|([,\s]+$)/g, '')
     columnQuery = columnQuery.replace(/(^[,\s]+)|([,\s]+$)/g, '');
-    deleteColumn = deleteColumn.replace(/(^[,\s]+)|([,\s]+$)/g, '');
+    deleteColumns = deleteColumns.replace(/(^[,\s]+)|([,\s]+$)/g, '');
 
-    console.log(deleteColumn, " COLUMN DELETE ");
+    // console.log(deleteColumns, " COLUMN DELETE ");
     console.log(columnQuery, "columnQuery");
     console.log(fieldsData, "Fields data");
     console.log(newData, " Table description ");
@@ -437,8 +481,8 @@ async function editTable(req, res, id) {
             changed = true;
         }
 
-        if (deleteColumn) {
-            let deleteColumnQuery = `ALTER TABLE "${newData.tablename}" ${deleteColumn};`
+        if (deleteColumns) {
+            let deleteColumnQuery = `ALTER TABLE "${newData.tablename}" ${deleteColumns};`
             console.log(deleteColumnQuery, "deletecolumnQuery");
             deleteColumnResult = await queryExecute(deleteColumnQuery);
             let deleteResult = await queryExecute(deleteOldDataQuery);
@@ -463,6 +507,23 @@ async function editTable(req, res, id) {
             fieldstableResult = await queryExecute(fieldstableQuery);
 
             changed = true;
+        }
+
+        if (dropdownlist.length != 0) {
+
+            dropdownData.forEach((field) => {
+                field.tableid = id
+            })
+
+            console.log(dropdownData, "DROP DOWN")
+
+            let query4 = squel
+                .insert()
+                .into("dropdowntable")
+                .setFieldsRows(dropdownData)
+                .toString();
+
+            let response4 = await queryExecute(query4);
         }
 
         return changed;
@@ -532,58 +593,41 @@ module.exports = {
 
 
 
-
-
-
-
-
-
-
-
-// fieldsData.push({
-//     fieldname: 'uid',
-//     fieldtype: 'serial',
-//     constraint: false
+// req.body.forEach((item, index) => {
+//     for (var key in item) {
+//         if (key == 'tablename' || key == 'Description') {
+//             newData = {
+//                 tablename: escape(item.tablename),
+//                 Description: item.Description
+//             }
+//         } else {
+//             if (key == 'deletefield') {
+//                 deleteColumn = deleteColumn + 'DROP COLUMN' + ' ' + '"' + escape(item.deletefield) + '"' + ','
+//             }
+//         }
+//     }
 // })
 
-// fieldsData.forEach((field) => {
-//     field.tableid = id
-// });
 
-//  let fieldstableQuery = squel
-//     .select()
-//     .from('fieldstable')
-//     .field('fieldname')
-//     .where('tableid=?', id)
-//     .toString();
+// req.body.forEach((item, index) => {
 
-// let deleteFieldQuery = squel
-//     .delete()
-//     .from('fieldstable')
-//     .where('tableid=?', id)
-//     .toString();
+//     let data = {};
+//     let newdata = {};
 
-// // console.log(updateTableQuery, "11");
-// // console.log(deleteFieldQuery, "22");
-// // console.log(insertFieldQuery, "33");
+//     for (var key in item) {
+//         if (key == 'fieldname' || key == 'label' || key == 'fieldtype' || key == 'konstraint') {
 
-// try {
-//     let oldData = await TableData(id);
-//     let tablenameQuery = `ALTER TABLE IF EXISTS ${oldData.tablename} RENAME TO ${newData.tablename}`
+//             data[key] = item[key]
 
-//     let columnQuery = ``
+//         } else if (key == 'newfieldname' || key == 'newlabel' || key == 'newfieldtype' || key == 'newkonstraint') {
 
-//     let resp = await queryExecute(updateTableQuery);
-//     let resp1 = await queryExecute(deleteFieldQuery)
-//     let resp2 = await queryExecute(insertFieldQuery);
+//             newdata[key] = item[key];
 
-//     // console.log(resp,"0000");
-//     // console.log(resp1,"111");
-//     // console.log(resp2,"222");
+//         }
+//     }
+//     if (Object.keys(data).length != 0)
+//         fieldsData.push(data);
 
-
-//     // return resp2;
-
-// } catch (err) {
-//     return Promise.reject(err);
-// }
+//     if (Object.keys(newdata).length != 0)
+//         newfieldsData.push(newdata);
+// })

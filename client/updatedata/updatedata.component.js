@@ -13,8 +13,8 @@ app.controller("updatedataController", ['$scope', '$rootScope', '$location', '$r
                 userService.getById($routeParams.tableid)
                     .then((response) => {
                             $scope.colinfo = response;
-                        console.log($scope.colinfo, "111TEST");
-                            
+                            // console.log($scope.colinfo, "111TEST");
+
                             $scope.colinfo1 = [];
                             $scope.colinfo.forEach((item, index) => {
                                 if (item.fieldname != 'uid') {
@@ -25,8 +25,8 @@ app.controller("updatedataController", ['$scope', '$rootScope', '$location', '$r
                                     })
                                 }
                             });
-                        console.log($scope.colinfo1, "TEST");
-                            
+                            //console.log($scope.colinfo1, "TEST");
+
                         },
                         function (errResponse) {
                             console.error('Error while fetching field data ');
@@ -51,12 +51,36 @@ app.controller("updatedataController", ['$scope', '$rootScope', '$location', '$r
                             $scope.data2.push(datas);
                         });
                         $scope.data = $scope.data2[0];
-                        console.log($scope.data, "!@#$%^&*()");
+                        // console.log($scope.data, "!@#$%^&*()");
                     }, ((errResponse) => {
                         console.log(errResponse, "Error while fetching data ");
                     }))
             }
             $scope.datainfo();
+
+            $scope.dropdownInfo = function () {
+                userService.fetchddValue($routeParams.tableid)
+                    .then((response) => {
+                        if(response){
+                            $scope.ddinfo1 = [];
+                            $scope.ddinfo = response;
+                            $scope.ddinfo.forEach((item, index) => {
+                                $scope.ddinfo1.push({
+                                    ddValue: item.options,
+                                    colname: item.colname
+                                })
+                            });
+                            console.log($scope.ddinfo1, "ddinfo1");
+                        }else{
+                            console.log(response);
+                        }
+                        },
+                        function (errResponse) {
+                            console.error('Error while fetching dropdown data ');
+                        }
+                    );
+            }
+            $scope.dropdownInfo();
 
             $scope.modifiedUser = {
                 user: $rootScope.CurrentUser,

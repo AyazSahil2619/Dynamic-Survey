@@ -19,7 +19,7 @@
                             </td>
                             <td ng-if="x.fieldtype == 'dropdown'">
                                 <select class="form-control" ng-model="data[x.fieldname]" required>
-                                    <option value="{{y.ddValue}}" ng-repeat="y in ddinfo1">{{y.ddValue}}</option>
+                                    <option value="{{y.ddValue}}" ng-repeat="y in ddinfo1" ng-if="y.colname == x.fieldname">{{y.ddValue}}</option>
                                 </select>
                             </td>
                             <td ng-if="x.fieldtype == 'varchar'">

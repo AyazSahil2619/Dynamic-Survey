@@ -195,10 +195,11 @@ myService.factory('userService', ['$http', '$q', '$location', 'toast', function 
                     }
                 );
         },
-        editTable: function (id, data) {
+        editTable: function (id, newData) {
             console.log(id, "TABLE ID");
-            console.log(data, "DATA");
-            return $http.put('/editTable/' + id, data)
+            console.log(newData, "DATA");
+            
+            return $http.put('/editTable/' + id, newData)
                 .then(
                     function (response) {
                         console.log(response.data, "AFTER RESPONSE");

@@ -56,6 +56,11 @@ app.controller("tableupdateController", ['$scope', '$rootScope', '$location', '$
 
 
             $scope.columns = [];
+            $scope.dropdownlist = [];
+            $scope.dropdownValue = [];
+            $scope.ddlist = [];
+            var count = 0;
+
 
             $scope.addNewColumn = function () {
                 var newItemNo = $scope.columns.length + 1;
@@ -64,6 +69,20 @@ app.controller("tableupdateController", ['$scope', '$rootScope', '$location', '$
                 });
             };
 
+            $scope.dropdown = function (index) {
+
+                count = count + 1;
+                if ($scope.dropdownlist[index]) {
+                    $scope.dropdownlist[index].push({
+                        id: 'dd' + count
+                    })
+                } else {
+                    $scope.dropdownlist[index] = [{
+                        id: 'dd' + count
+                    }]
+                }
+            }
+
             $scope.removeCol = function () {
 
                 newItemNo = $scope.columns.length - 1;
@@ -71,15 +90,14 @@ app.controller("tableupdateController", ['$scope', '$rootScope', '$location', '$
 
             }
 
+            // $scope.newColumns = [];
+            $scope.newColumns = {};
+            $scope.newColInfo = [];
 
-
-
-            $scope.newColumns = [];
 
 
             $scope.submit = function () {
 
-                // console.log($scope.columns,"1111111111111111111111");
 
                 for (let i = 0; i < $scope.columns.length; i++) {
                     if ($scope.columns[i].ColInfo.constraints) {
@@ -89,7 +107,8 @@ app.controller("tableupdateController", ['$scope', '$rootScope', '$location', '$
                             newfieldtype: $scope.columns[i].ColInfo.type,
                             newkonstraint: $scope.columns[i].ColInfo.constraints
                         }
-                        $scope.newColumns.push(data);
+                        $scope.newColInfo.push(data);
+                        // $scope.newColumns.push(data);
                     } else {
                         let data = {
                             newfieldname: $scope.columns[i].ColInfo.colname,
@@ -97,20 +116,37 @@ app.controller("tableupdateController", ['$scope', '$rootScope', '$location', '$
                             newfieldtype: $scope.columns[i].ColInfo.type,
                             newkonstraint: false
                         }
-                        $scope.newColumns.push(data);
+                        $scope.newColInfo.push(data);
+                        // $scope.newColumns.push(data);
+                    }
+
+                    if ($scope.columns[i].ddlist) {
+                        $scope.columns[i].ddlist.colname = $scope.columns[i].ColInfo.colname;
+                        $scope.dropdownValue.push($scope.columns[i].ddlist);
                     }
                 }
 
-                $scope.colinfo1.forEach((item) => {
-                    $scope.newColumns.push(item);
-                })
-                $scope.tableinfo.forEach((item, index) => {
-                    $scope.newColumns.push(item);
-                })
-                $scope.deleteColumnArray.forEach((item) => {
-                    $scope.newColumns.push(item);
-                })
-                // console.log($scope.newColumns, "NEW COLUMNS");
+                // $scope.colinfo1.forEach((item) => {
+                //     $scope.newColumns.push(item);
+                // })
+                // $scope.tableinfo.forEach((item, index) => {
+                //     $scope.newColumns.push(item);
+                // })
+                // $scope.deleteColumnArray.forEach((item) => {
+                //     $scope.newColumns.push(item);
+                // })
+                $scope.newColumns.tableInfo = $scope.tableinfo;
+                $scope.newColumns.oldColumn = $scope.colinfo1;
+                $scope.newColumns.deleteColumn = $scope.deleteColumnArray;
+                $scope.newColumns.newColumns = $scope.newColInfo;
+                $scope.newColumns.ddInfo = $scope.dropdownValue;
+
+                // $scope.dropdownValue.forEach((item, index) => {
+                //     $scope.newColumns.push(item);
+                // })
+
+
+                console.log($scope.newColumns, "NEW COLUMNS");
                 // console.log($scope.tableinfo, "TABLEINFO")
 
                 let check = {
@@ -130,7 +166,7 @@ app.controller("tableupdateController", ['$scope', '$rootScope', '$location', '$
                             userService.modified($routeParams.tableid, $scope.modifiedUser)
                                 .then((response) => {
                                     $location.path('/data/' + $routeParams.tableid);
-                                    toast.success(`${$scope.tableinfo[0].tablename} has been EDITED successfully`);
+                                    toast.success(`Table ${$scope.tableinfo[0].tablename} has been EDITED successfully`);
 
                                 }, (errResponse) => {
                                     console.log(errResponse, 'Error while modifying mastertable')
@@ -148,7 +184,7 @@ app.controller("tableupdateController", ['$scope', '$rootScope', '$location', '$
                                         userService.modified($routeParams.tableid, $scope.modifiedUser)
                                             .then((response) => {
                                                 $location.path('/data/' + $routeParams.tableid);
-                                                toast.success(`${$scope.tableinfo[0].tablename} has been EDITED successfully`);
+                                                toast.success(`Table ${$scope.tableinfo[0].tablename} has been EDITED successfully`);
 
                                             }, (errResponse) => {
                                                 console.log(errResponse, 'Error while modifying mastertable')

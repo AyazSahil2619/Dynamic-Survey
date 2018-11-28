@@ -250,9 +250,7 @@ async function fetchDropdownList(req, res, id) {
             console.log(resp);
             return resp.rows;
         } else {
-            return Promise.reject({
-                err: "Data not found"
-            });
+            return false;
         }
     } catch (err) {
         return Promise.reject(err.message);

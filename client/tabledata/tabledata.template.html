@@ -26,9 +26,10 @@
                 <button class="btn btn-primary float-right" ng-click="addNewColumn()"><i class="fas fa-plus-circle"></i></button><br><br>
                 <form ng-submit="form.$valid && submit()" name="form" class="form-group" novalidate>
                     <fieldset ng-repeat="column in columns track by $index">
+                        <!-- {{column}} -->
                         <div class="row">
                             <div class="col-md-6">
-                                <label>Name *</label>
+                                <label>Name <i Style="color: red">*</i></label>
                                 <input class="form-control" type="text" ng-model="column.ColInfo.name" name="colname{{$index}}"
                                     placeholder="Column Name" required>
                                 <div style="color: red" ng-show="form.$submitted && form.colname{{$index}}.$error.required">Name
@@ -39,14 +40,14 @@
                                 <input class="form-control" type="checkbox" name="constraints" ng-model="column.ColInfo.constraints"><br>
                             </div>
                             <div class="col-md-12">
-                                <label>Label *</label>
+                                <label>Label <i Style="color: red">*</i></label>
                                 <input class="form-control" type="text" ng-model="column.ColInfo.label" name="label{{$index}}"
                                     required>
                                 <div style="color: red" ng-show="form.$submitted && form.label{{$index}}.$error.required">Label
                                     is required</div>
                             </div>
                             <div class="col-md-6">
-                                <label>Field type *</label>
+                                <label>Field type <i Style="color: red">*</i></label>
                                 <select class="form-control" name="coltype{{$index}}" ng-model="column.ColInfo.type"
                                     required>
                                     <option value="" selected>select</option>
@@ -62,9 +63,10 @@
                             </div>
                             <div class="col-md-6" ng-if="column.ColInfo.type == 'dropdown'">
                                 <label>Dropdown Value</label>
-                                <a class="btn btn-primary float-right" ng-click="dropdown()"><i class="fas fa-plus-circle"></i></a>
-                                <div ng-repeat="dropdown in dropdownlist track by $index">
-                                    <input class="form-control" name="dd{{$index}}" type="text" ng-model="dropdown.ddInfo.ddlist"><br>
+                                <a class="btn btn-primary float-right" ng-click="dropdown($index)"><i class="fas fa-plus-circle"></i></a>
+                                <div ng-repeat="dropdown in dropdownlist[$index] track by $index">
+                                        <!-- {{$index}}dd{{column.colId}} -->
+                                    <input id="{{$index}}dd{{column.colId}}" class="form-control" name="{{$index}}dd{{column.colId}}" type="text" ng-model="column.ddlist[(dropdown.id)]"><br>
                                 </div>
                             </div>
                         </div>
